@@ -1,0 +1,15 @@
+/* TEAM */
+	Chef:Chybeat (Andres Salazar)
+	Contact: chybeat (Discord) @chybeat (telegram)
+	github: https://github.com/chybeat
+	From:BogotÃ¡, Colombia
+
+	UI developer: ChyBeat
+
+	Web developer: ChyBeat
+
+/* SITE */
+	Last update:2025/01/21
+	Language: Spanish
+	Doctype:HTML5
+	IDE: Visual Studio Code, InkScape, Google Chrome Dev

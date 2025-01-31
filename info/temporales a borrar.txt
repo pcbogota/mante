@@ -1,0 +1,1 @@
+$env:APPDATA\Adobe\Adobe Illustrator 26 Settings\es_MX\x64\DataRecovery
