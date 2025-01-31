@@ -50,10 +50,10 @@ $global:ManteScriptPath = "$env:PROGRAMDATA\PCBogota\libs"
 
 #Get-RequiredModules
 
-Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-win_install_main_module.psm1" -Global -Force
-Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-main_mante_module.psm1" -Global -Force
-Get-Greetings
-exit
+# Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-win_install_main_module.psm1" -Global -Force
+# Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-main_mante_module.psm1" -Global -Force
+# Get-Greetings
+# return
 
 
 #tools (descargar e instalar)
@@ -66,8 +66,8 @@ exit
 # sqlite3.exe ??
 # instalar.sqlite3 ??
 
-Get-Aria2c
-exit
+# Get-Aria2c
+# exit
 
 
 Get-ExecutionPolicy -List
