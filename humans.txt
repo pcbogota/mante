@@ -1,15 +1,20 @@
 /* TEAM */
-	Chef:Chybeat (Andres Salazar)
+	Chef: Chybeat (Andres Salazar)
 	Contact: chybeat (Discord) @chybeat (telegram)
 	github: https://github.com/chybeat
 	From:Bogotá, Colombia
 
 	UI developer: ChyBeat
-
 	Web developer: ChyBeat
 
 /* SITE */
 	Last update:2025/01/21
 	Language: Spanish
 	Doctype:HTML5
-	IDE: Visual Studio Code, InkScape, Google Chrome Dev
+	IDE: Visual Studio Code
+
+/*Powershell Scripts*/
+	Last update:2025/02/31
+	Language: Spanish
+	Powershell Version: 5.1.26100.2161
+	IDE: Visual Studio Code
