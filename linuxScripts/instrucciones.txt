@@ -1,6 +1,6 @@
 copiar los archivos a la carpeta $HOME (~) de Linux
 
-al archivo createssh.sh y a updaterepo.sh dar permisos de ejecuciÃ³n:
+al archivo createssh.sh y a updaterepo.sh dar permisos de ejecución:
 cd ~
 chmod +x createssh.sh
 chmod +x updaterepo.sh
@@ -10,7 +10,7 @@ luego ejecutar ./createssh.sh
 
 usar el nombre de archivo que se sugiere en el script. (algo como: /home/<usuario>/ssh/github_pcbog)
 
-abrir https://github.com/settings/ssh/new y pegar el cÃ³digo ssh que arroja
+abrir https://github.com/settings/ssh/new y pegar el código ssh que arroja
 
 reiniciar wsl
 
@@ -26,5 +26,5 @@ wsl git remote add origin git@github.com:pcbogota/mante.git
 
 
 ===comandos
-ghconn realiza la conexiÃ³n con github
-updatelinux actualiza Linux fÃ¡cilmente (requiere contraseÃ±a de sudo)
+ghconn realiza la conexión con github
+updatelinux actualiza Linux fácilmente (requiere contraseña de sudo)

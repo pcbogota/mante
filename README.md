@@ -10,40 +10,40 @@ Desde powershell utilizar el siguiente comando:
 irm https://pcbogota.github.io/mante|iex
 ```
 
-Visitar la [pÃ¡gina](https://pcbogota.github.io/mante) te muestra un mensaje y una animaciÃ³n (si estas desde un PC).ðŸ˜Š
+Visitar la [página](https://pcbogota.github.io/mante) te muestra un mensaje y una animación (si estas desde un PC).😊
 
-## InicializaciÃ³n del proyecto en local
+## Inicialización del proyecto en local
 
-1. Para comenzar a trabajar con este proyecto localmente, despuÃ©s de clonar el repositorio, la estructura de carpetas debe ser la siguiente:
+1. Para comenzar a trabajar con este proyecto localmente, después de clonar el repositorio, la estructura de carpetas debe ser la siguiente:
 
 ```
 <carpeta_de_proyecto>
-   â”œâ”€ .git               <-- Repositorio Git local (UTF-8 con BOM)
-   â”œâ”€ .gitignore         <-- Archivo .gitignore el proyecto
-   â””â”€ .github-staging\   <-- Directorio de preparaciÃ³n para GitHub (UTF-8 sin BOM)
-      â””â”€ .git            <-- Repositorio Git para subida a GitHub
+   ├─ .git               <-- Repositorio Git local (UTF-8 con BOM)
+   ├─ .gitignore         <-- Archivo .gitignore el proyecto
+   └─ .github-staging\   <-- Directorio de preparación para GitHub (UTF-8 sin BOM)
+      └─ .git            <-- Repositorio Git para subida a GitHub
 ```
 
-**DescripciÃ³n de las carpetas y archivos:**
+**Descripción de las carpetas y archivos:**
 
-- **.git (en la raÃ­z del proyecto):** Este es el repositorio Git principal para tu trabajo local. Los archivos dentro de esta carpeta controlan el historial de versiones de tu proyecto localmente. Los archivos en este directorio se guardan con codificaciÃ³n UTF-8 **_con BOM_**.
+- **.git (en la raíz del proyecto):** Este es el repositorio Git principal para tu trabajo local. Los archivos dentro de esta carpeta controlan el historial de versiones de tu proyecto localmente. Los archivos en este directorio se guardan con codificación UTF-8 **_con BOM_**.
 
-- **.gitignore (en la raÃ­z del proyecto):** Este archivo especifica los archivos y carpetas que Git debe ignorar en el repositorio local. Contiene al menos la siguiente lÃ­nea:
+- **.gitignore (en la raíz del proyecto):** Este archivo especifica los archivos y carpetas que Git debe ignorar en el repositorio local. Contiene al menos la siguiente línea:
 
   ```
   .github-staging/
   ```
 
-  Esta lÃ­nea asegura que la carpeta `.github-staging` no sea rastreada por el repositorio local.
+  Esta línea asegura que la carpeta `.github-staging` no sea rastreada por el repositorio local.
 
-- **.github-staging/:** Este directorio se utiliza _exclusivamente_ para preparar los archivos antes de subirlos a GitHub. Los archivos dentro de esta carpeta se convierten a codificaciÃ³n UTF-8 **_sin BOM_** antes de ser aÃ±adidos al repositorio de subida.
+- **.github-staging/:** Este directorio se utiliza _exclusivamente_ para preparar los archivos antes de subirlos a GitHub. Los archivos dentro de esta carpeta se convierten a codificación UTF-8 **_sin BOM_** antes de ser añadidos al repositorio de subida.
 
-- **.git (dentro de .github-staging/):** Este es un repositorio Git _independiente_ que se utiliza Ãºnicamente para subir los archivos a GitHub. Los archivos dentro de este repositorio se guardan con codificaciÃ³n UTF-8 _sin_ BOM.
+- **.git (dentro de .github-staging/):** Este es un repositorio Git _independiente_ que se utiliza únicamente para subir los archivos a GitHub. Los archivos dentro de este repositorio se guardan con codificación UTF-8 _sin_ BOM.
 
-**ExplicaciÃ³n del flujo de trabajo:**
+**Explicación del flujo de trabajo:**
 
 Este setup permite:
 
-- Mantener un historial de versiones local con archivos en UTF-8 con BOM, lo cual es necesario para poder ejecutar y probar el cÃ³digo en local.
-- Subir los archivos a GitHub con codificaciÃ³n UTF-8 sin BOM, que es el formato esperado por GitHub, evitando problemas de caracteres extraÃ±os.
+- Mantener un historial de versiones local con archivos en UTF-8 con BOM, lo cual es necesario para poder ejecutar y probar el código en local.
+- Subir los archivos a GitHub con codificación UTF-8 sin BOM, que es el formato esperado por GitHub, evitando problemas de caracteres extraños.
 - Mantener un `git status` limpio en tu directorio de trabajo local, ya que la carpeta `.github-staging` se ignora.

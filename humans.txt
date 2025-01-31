@@ -2,7 +2,7 @@
 	Chef:Chybeat (Andres Salazar)
 	Contact: chybeat (Discord) @chybeat (telegram)
 	github: https://github.com/chybeat
-	From:BogotÃ¡, Colombia
+	From:Bogotá, Colombia
 
 	UI developer: ChyBeat
 
