@@ -28,5 +28,3 @@ function Get-Aria2c {
 function Get-Greetings {
 	Write-Host "Bienvenido!! :) canción datos y cosítas ü 😊❤️. ¿Qué mas puedo decir 🤪🤪🤪🤪?"
 }
-
-Write-Host "test in main!"

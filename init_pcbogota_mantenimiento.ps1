@@ -80,13 +80,13 @@ Get-ExecutionPolicy -List
 #PowerShell.exe Set-ExecutionPolicy -Scope CurrentUser Undefined -force
 
 
-Write-Host "Inicializalizando...`n`n"
-Write-Host 'Para inicializar se require:
-Set-ExecutionPolicy -Scope CurrentUser Unrestricted -force
-Set-ExecutionPolicy -Scope LocalMachine Unrestricted -force
-
-El valor predeterminado es:
-Set-ExecutionPolicy -Scope LocalMachine Undefined -force
-Set-ExecutionPolicy -Scope CurrentUser Undefined -force
-'
+# Write-Host "Inicializalizando...`n`n"
+# Write-Host 'Para inicializar se require:
+# Set-ExecutionPolicy -Scope CurrentUser Unrestricted -force
+# Set-ExecutionPolicy -Scope LocalMachine Unrestricted -force
+#
+# El valor predeterminado es:
+# Set-ExecutionPolicy -Scope LocalMachine Undefined -force
+# Set-ExecutionPolicy -Scope CurrentUser Undefined -force
+# '
 Write-Host "Aquí veras cositas raras nene ❤️😂😊👌."
