@@ -6,6 +6,7 @@ function ConvertTo-UTF8WithBOM {
 	$utf8WithBOM = New-Object System.Text.UTF8Encoding $true
 	[System.IO.File]::WriteAllText($FilePath, $content, $utf8WithBOM)
 }
+
 function Get-Aria2c {
 	$url = "https://github.com/aria2/aria2/releases/latest"
 

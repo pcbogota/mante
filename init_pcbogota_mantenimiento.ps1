@@ -1,3 +1,11 @@
+function ConvertTo-UTF8WithBOM {
+	param (
+		[string]$FilePath
+	)
+	$content = Get-Content -Path $FilePath -Raw -Encoding UTF8
+	$utf8WithBOM = New-Object System.Text.UTF8Encoding $true
+	[System.IO.File]::WriteAllText($FilePath, $content, $utf8WithBOM)
+}
 function Get-RequiredModules {
 	$remoteModulesPath = 'https://raw.githubusercontent.com/pcbogota/mante/refs/heads/main/lib'
 
@@ -15,7 +23,7 @@ function Get-RequiredModules {
 	}
 
 	$modules | ForEach-Object {
-		$destFile = "$global:ManteScriptPath\$_"
+		$destFile = "$global:ManteScriptPath\lib\$_"
 		Invoke-RestMethod -Uri "$remoteModulesPath\$_" | Out-File $destFile -Force
 		ConvertTo-UTF8WithBOM $destFile
 	}
@@ -35,7 +43,7 @@ function Add-processUpdate() {
 ## ---------------- ##
 ######################
 
-$global:ManteScriptPath = "$env:PROGRAMDATA\PCBogota\lib"
+$global:ManteScriptPath = "$env:PROGRAMDATA\PCBogota"
 
 ##################
 ## ------------ ##
@@ -46,8 +54,8 @@ $global:ManteScriptPath = "$env:PROGRAMDATA\PCBogota\lib"
 Clear-Host
 Get-RequiredModules
 $global:ManteScriptPath
-Import-Module -DisableNameChecking "$global:ManteScriptPath\pcb-win_install_main_module.psm1" -Global -Force
-# Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-main_mante_module.psm1" -Global -Force
+Import-Module -DisableNameChecking "$global:ManteScriptPath\lib\pcb-win_install_main_module.psm1" -Global -Force
+Import-Module -DisableNameChecking "$global:ManteScriptPath\lib\pcb-main_mante_module.psm1" -Global -Force
 # Get-Greetings
 # return
 
