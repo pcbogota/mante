@@ -1,8 +1,3 @@
-# Clear-Host
-if (!($env:TERM_PROGRAM -eq 'vscode') -and !($psISE)) {
-	[console]::WindowWidth = 129; [console]::WindowHeight = 42; [console]::BufferWidth = [console]::WindowWidth
-}
-
 function Get-RequiredModules {
 	$remoteModulesPath = 'https://raw.githubusercontent.com/pcbogota/mante/refs/heads/main/lib'
 

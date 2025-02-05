@@ -28,7 +28,7 @@ Visitar la [página](https://pcbogota.github.io/mante) te muestra un mensaje y u
 
 - **.git (en la raíz del proyecto):** Este es el repositorio Git principal para tu trabajo local. Los archivos dentro de esta carpeta controlan el historial de versiones de tu proyecto localmente. Los archivos en este directorio se guardan con codificación UTF-8 **_con BOM_**.
 
-- **.gitignore (en la raíz del proyecto):** Este archivo especifica los archivos y carpetas que Git debe ignorar en el repositorio local. Contiene al menos la siguiente línea:
+- **.gitignore (en la raíz del proyecto):** Este archivo especifica los archivos y carpetas que Git debe ignorar en el repositorio local. Debe contener al menos la siguiente línea:
 
   ```
   .github-staging/
@@ -36,11 +36,11 @@ Visitar la [página](https://pcbogota.github.io/mante) te muestra un mensaje y u
 
   Esta línea asegura que la carpeta `.github-staging` no sea rastreada por el repositorio local.
 
-- **.github-staging/:** Este directorio se utiliza _exclusivamente_ para preparar los archivos antes de subirlos a GitHub. Los archivos dentro de esta carpeta se convierten a codificación UTF-8 **_sin BOM_** antes de ser añadidos al repositorio de subida.
+- **.github-staging/:** Este directorio se utiliza _exclusivamente_ para preparar los archivos antes de subirlos a GitHub. Los archivos `.ps1` dentro de esta carpeta se convierten a codificación UTF-8 **_sin BOM_** antes de ser añadidos al repositorio de subida.
 
-- **.git (dentro de .github-staging/):** Este es un repositorio Git _independiente_ que se utiliza únicamente para subir los archivos a GitHub. Los archivos dentro de este repositorio se guardan con codificación UTF-8 _sin_ BOM.
+- **.github-staging/.git:** Este es un repositorio Git _independiente_ que se utiliza únicamente para subir los archivos a GitHub.
 
-**Explicación del flujo de trabajo:**
+## Explicación del flujo de trabajo:
 
 Este setup permite:
 

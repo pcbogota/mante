@@ -2,6 +2,12 @@
 # Variables globales para este modulo #
 #######################################
 
+# Colores usados para los textos del script
+# Conocer más en: https://jdhitsolutions.com/blog/powershell/7479/friday-fun-with-powershell-and-ansi/
+# Comando para obtener la lista de colores y salir (no usar en este archivo!!)
+
+
+
 # teclas que se ignoran en Pause y Get-UserAnswer
 $global:keyboardPressIgnores = (
 	16, # Shift (left or right)
@@ -61,7 +67,7 @@ function Register-Libraries {
 			}
 			if (Test-Path -Path "$PSScriptRoot\$lib" -PathType Leaf -ErrorAction SilentlyContinue) {
 				Import-Module -DisableNameChecking "$PSScriptRoot\$lib" -Global -Force
-				Write-Host "Libreria ${lib} cargada" -ForegroundColor Blue
+				Write-Host "Libreria ${lib} cargada" -ForegroundColor Cyan
 			} else {
 				Write-Output "NOT lib exists!"
 				$Text = "No se encotró el archivo ${lib}."
@@ -1544,7 +1550,7 @@ function Set-PrefsFile {
 		Un objeto que debe tener los siguientes parametros:
 		.file = Nombre de archivo de preferencias
 		.Path = Ruta donde se guardará el archivo de preferencias
-		.enc  = Codificación del archivo de preferencias
+		.enc  = Codificación del archivo de preferencias (utf8,utf8BOM)
 		.data = La información que se guardará en el archivo de preferencias
 #>
 	param(
@@ -1565,15 +1571,45 @@ function Set-PrefsFile {
 			$Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
 			[System.IO.File]::WriteAllLines($PrefsFilePath, $preferences.Data, $Utf8NoBomEncoding)
 		} elseif ($preferences.Enc -eq "utf8BOM") {
-			$enc = [System.Text.Encoding]::GetEncoding("utf-8")
-			[System.IO.File]::WriteAllLines($PrefsFilePath, $preferences.data, $enc)
+			$Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $true
+			[System.IO.File]::WriteAllLines($PrefsFilePath, $preferences.Data, $Utf8NoBomEncoding)
 		} elseif ($preferences.Enc) {
+			stop("No hay una codificación como tal y la siguiente línea no es correcta para este else, hay una funcuón por ahí para determinar la codificación de un archivo!! - pcb-Get-FileEncoding.ps1")
 			$enc = [System.Text.Encoding]::GetEncoding($preferences.Enc)
-			[System.IO.File]::WriteAllLines($PrefsFilePath, $preferences.data, $enc)
+			[System.IO.File]::WriteAllLines($PrefsFilePath, $preferences.Data, $enc)
 		} else {
 			$preferences.Data | Out-File -FilePath $PrefsFilePath -Force
 		}
 	}
+}
+
+# Función para mostrar colores y formatos con códigos
+function Show-Colors {
+	# Colores de texto (38;5;n)
+	Write-Host "`nColores de texto (256 colores):`n"
+	for ($i = 0; $i -lt 256; $i++) {
+		$escapedtxt = "`$([char]0x1b)[38;5;${i}m"
+		Write-Host "$($escapedtxt) > $([char]0x1b)[38;5;$($i)mTexto de muestra$([char]0x1b)[0m"
+	}
+
+	# Formatos de texto
+	Write-Host "`n`nFormatos de texto:`n"
+	Write-Host "`$([char]0x1b)[0m    Borar formato       - $([char]0x1b)[0mTexto normal$([char]0x1b)[0m"
+	Write-Host "`$([char]0x1b)[1m    Negrita             - $([char]0x1b)[1mTexto en negrita$([char]0x1b)[0m"
+	Write-Host "`$([char]0x1b)[2m    Opaco               - $([char]0x1b)[2mTexto Opaco$([char]0x1b)[0m"
+	Write-Host "`$([char]0x1b)[3m    Cursiva             - $([char]0x1b)[3mTexto en cursiva$([char]0x1b)[0m"
+	Write-Host "`$([char]0x1b)[4m    Subrayado           - $([char]0x1b)[4mTexto subrayado$([char]0x1b)[0m"
+	Write-Host "`$([char]0x1b)[5m    Intermitente lento  - $([char]0x1b)[5mTexto intermitente lento$([char]0x1b)[0m"
+	Write-Host "`$([char]0x1b)[6m    Intermitente rápido - $([char]0x1b)[6mTexto intermitente rápido$([char]0x1b)[0m"
+	Write-Host "`$([char]0x1b)[7m    Invertido           - $([char]0x1b)[7mTexto Invertido$([char]0x1b)[0m"
+	Write-Host "`$([char]0x1b)[8m    Transparente        - $([char]0x1b)[8mTexto transparente$([char]0x1b)[0m"
+	Write-Host "`$([char]0x1b)[9m    Tachado             - $([char]0x1b)[9mTexto tachado$([char]0x1b)[0m"
+
+	Write-Host "`nPara los fondos usar: `$([char]0x1b)[48;5;<X>m donde <X> es el número de color`n`nPor ejemplo el código '$([char]0x1b)[3m`$([char]0x1b)[48;5;73mTexto de prueba' $([char]0x1b)[0m muestra:`n$([char]0x1b)[48;5;73mTexto de prueba$([char]0x1b)[0m"
+	Write-Host "`nPara usar combinación de fondo y color se debe colocar primero el fondo y luego el color: "
+	Write-Host '$([char]0x1b)[0m Se usa para eliminar la configuración de colores y fondo'
+
+	Write-Host "`nCombinación de todo:`n$([char]0x1b)[4m$([char]0x1b)[48;5;27m$([char]0x1b)[38;5;226mTexto subrayado, fondo azul texto amarillo$([char]0x1b)[0m y sin formato.`nCódigo:`n`$([char]0x1b)[4m`$([char]0x1b)[48;5;27m`$([char]0x1b)[38;5;226mTexto subrayado, fondo azul, texto amarillo`$([char]0x1b)[0m y sin formato."
 }
 
 function Start-AsSystem {
@@ -1660,6 +1696,87 @@ function Start-DbApp {
 		wInfo ("Esperando al cierre del proceso `"" + $process + "`" de " + $appName + "...")
 		while (((Get-Process).Name) -join '|' -like ("*$process*")) { Start-Sleep -s 1 }
 	}
+}
+
+function Stop {
+	param(
+		[string]$text
+	)
+
+	# Obtener la traza de ejecución (call stack)
+	$callStack = Get-PSCallStack | Select-Object -Skip 1 | Where-Object { $_.Location -ne "<sin archivo>" }
+
+	Write-Host ""
+
+	if (-not ([string]::IsNullOrWhiteSpace($text))) {
+		Write-Host "$([char]0x1b)[38;5;9mALTO!: $($text)`n"
+	}
+
+	$color = "$([char]0x1b)[38;5;3m"
+
+	# Separador de columnas
+	$sep = "$([char]0x1b)[37;1m|"
+
+	# Encabezados de la tabla
+	Write-Host ("{0,-13} {1,-68} {2,-1}" -f "$($color) Ln", "$($sep) $($color) Script", "$($sep) $($color) Llamada")
+
+	# Línea separadora
+	Write-Host ("-" * ([Math]::Min($Host.UI.RawUI.WindowSize.Width, 99))) -ForegroundColor gray
+
+	# Función para truncar texto desde el final (para la columna Script)
+	function Find-TextFromEnd {
+		param (
+			[string]$text,
+			[int]$maxWidth
+		)
+		if ($text.Length -gt $maxWidth) {
+			return "..." + $text.Substring($text.Length - $maxWidth + 3)
+		}
+		return $text
+	}
+
+	# Función para truncar texto desde el principio (para la columna Llamada)
+	function Find-TextFromStart {
+		param (
+			[string]$text,
+			[int]$maxWidth
+		)
+		if ($text.Length -gt $maxWidth) {
+			return $text.Substring(0, $maxWidth - 3) + "..."
+		}
+		return $text
+	}
+
+	# Mostrar cada entrada de la traza de ejecución
+	for ($i = 0; $i -lt $callStack.Count; $i++) {
+		$entry = $callStack[$i]
+
+		# Asignar colores y resaltes según el índice
+		if ($i -eq 0) {
+			$color = "$([char]0x1b)[38;5;231m"
+			$sign = "$([char]0x1b)[38;5;9m**"
+		} else {
+			$color = "$([char]0x1b)[38;5;245m"
+			$sign = ''
+		}
+
+		# Truncar el nombre del script desde el final (sin contar los caracteres de color)
+		$scriptName = $entry.ScriptName
+		$maxScriptWidth = 73 - ($sep.Length + $color.Length + 4)  # Ajustar para los caracteres de color
+		$truncatedScript = Find-TextFromEnd -text $scriptName -maxWidth $maxScriptWidth
+
+		# Truncar la columna Llamada desde el principio (sin contar los caracteres de color)
+		$llamada = $entry.Position.Text
+		$maxLlamadaWidth = 54 - ($sep.Length + $color.Length + 4)  # Ajustar para los caracteres de color
+		$truncatedLlamada = Find-TextFromStart -text $llamada -maxWidth $maxLlamadaWidth
+
+		$line = "$($color)$($entry.ScriptLineNumber)"
+		$script = "$($sep) $($color)$($truncatedScript)"
+		$position = "$($sep) $($color)$($truncatedLlamada) $sign"
+		Write-Host ("{0,-15} {1,-70} {2,-1}" -f $line, $script, $position)
+	}
+	Write-Host ""
+	exit
 }
 
 Function Test-IsLaptop {
@@ -1844,41 +1961,53 @@ function Wait-ForAdblock {
 
 function Write-Logo {
 	$year = Get-Date -Format yyyy
+	$copy = $([char]169) #copyright
+	$r = $([char]174)	#Registrado
+
 	$c = $([char]9608) #centro
 	$d = $([char]9612) #mitad derecha vacio
 	$i = $([char]9616) #mitad izquierda vacio
-	$p = $([char]8226) #punto
-	$r = $([char]174)	#Registrado
-	$copy = $([char]169) #copyright
+	$p = $([char]0x25CF) #punto
 	if ($w10) {
 		#revisar en Windows10 como imprime tanto en terminal como en la ventana directa de powershell
 		$c = $([char]9209) #centro
 		$d = $([char]9612) #mitad derecha vacio
 		$i = $([char]9616) #mitad izquierda vacio
-		$p = $([char]8226) #punto
-		$r = $([char]174)	#Registrado
+		$p = $([char]0x25CF) #punto
+		$r = $([char]174) #Registrado
 		$copy = $([char]169) #copyright
 	}
+	$cl = @{
+		bb  = "$([char]0x1b)[48;5;0m" #fondo black/negro
+		ty  = "$([char]0x1b)[38;5;214m" #texto amarillo
+		tr  = "$([char]0x1b)[38;5;196m" #Texto rojo
+		tw  = "$([char]0x1b)[38;5;15m" #Texto Blanco
+		to  = "$([char]0x1b)[2m" #Texto opaco
+		ti  = "$([char]0x1b)[6m" # texto intermitente rápido
+		til = "$([char]0x1b)[5m" # texto intermitente lento
+	}
 
-	$logo = "$([char]0x1b)[40m                                                                                                     `n"
-	$logo += "$([char]0x1b)[40m$([char]0x1b)[93m    $c$c$c$c$c$c$c$c $([char]0x1b)[91m$c$c$c$c$c$c$c$c $([char]0x1b)[97m                                                                               `n"
-	$logo += "$([char]0x1b)[40m$([char]0x1b)[93m    $c$c    $c$c $([char]0x1b)[91m$c$c    $c$c $([char]0x1b)[97m$c$c$c$c$c$c$d $c$c$c$c$c$c$c $c$c$c$c$c$c$c $c$c$c$c$c$c$c $c$c$c$c$c$c $c$c$c$c$c$c$c   $c$c$c$c$c$c $c$c$c$c$c$c$c $c$c$c$c$d$i$c$c$c$c$r    `n"
-	$logo += "$([char]0x1b)[40m$([char]0x1b)[93m    $c$c    $c$c $([char]0x1b)[91m$c$c       $([char]0x1b)[97m$c$c   $c$d $c$c   $c$c $c$c      $c$c   $c$c   $c$c   $c$c   $c$c   $c$c     $c$c   $c$c $c$c  $c$c  $c$c     `n"
-	$logo += "$([char]0x1b)[40m$([char]0x1b)[93m    $c$c$c$c$c$c$c$c $([char]0x1b)[91m$c$c       $([char]0x1b)[97m$c$c$c$c$c$c$c $c$c   $c$c $c$c  $c$c$c $c$c   $c$c   $c$c   $c$c$c$c$c$c$c   $c$c     $c$c   $c$c $c$c  $c$c  $c$c     `n"
-	$logo += "$([char]0x1b)[40m$([char]0x1b)[93m    $c$c       $([char]0x1b)[91m$c$c    $c$c $([char]0x1b)[97m$c$c   $c$c $c$c   $c$c $c$c   $c$c $c$c   $c$c   $c$c   $c$c   $c$c   $c$c     $c$c   $c$c $c$c  $c$c  $c$c     `n"
-	$logo += "$([char]0x1b)[40m$([char]0x1b)[93m    $c$c       $([char]0x1b)[91m$c$c$c$c$c$c$c$c $([char]0x1b)[97m$c$c$c$c$c$c$c $c$c$c$c$c$c$c $c$c$c$c$c$c$c $c$c$c$c$c$c$c   $c$c   $c$c   $c$c $p $c$c$c$c$c$c $c$c$c$c$c$c$c $c$c  $c$c  $c$c     `n"
-	$logo += "                                                                                                     `n"
-	$logo += "$([char]0x1b)[0m$([char]0x1b)[40m                                                                         $([char]0x1b)[97mCamilo Salazar (ChyBeat)    `n"
-	$logo += "$([char]0x1b)[40m                                                                 $([char]0x1b)[90mLimited Liability Partner $copy $year    `n"
-	$logo += "                                                                                                     `n"
+	$logo = "$($cl.bb)                                                                                                                                 `n"
+	$logo += "$($cl.bb) $($cl.ty)                 $c$c$c$c$c$c$c$c $($cl.tr)$c$c$c$c$c$c$c$c $($cl.tw)                                                                                             `n"
+	$logo += "$($cl.bb) $($cl.ty)                 $c$c    $c$c $($cl.tr)$c$c    $c$c $($cl.tw)$c$c$c$c$c$c$d $c$c$c$c$c$c$c $c$c$c$c$c$c$c $c$c$c$c$c$c$c $c$c$c$c$c$c $c$c$c$c$c$c$c   $c$c$c$c$c$c $c$c$c$c$c$c$c $c$c$c$c$d$i$c$c$c$c$r                  `n"
+	$logo += "$($cl.bb) $($cl.ty)                 $c$c    $c$c $($cl.tr)$c$c       $($cl.tw)$c$c   $c$d $c$c   $c$c $c$c      $c$c   $c$c   $c$c   $c$c   $c$c   $c$c     $c$c   $c$c $c$c  $c$c  $c$c                   `n"
+	$logo += "$($cl.bb) $($cl.ty)                 $c$c$c$c$c$c$c$c $($cl.tr)$c$c       $($cl.tw)$c$c$c$c$c$c$c $c$c   $c$c $c$c  $c$c$c $c$c   $c$c   $c$c   $c$c$c$c$c$c$c   $c$c     $c$c   $c$c $c$c  $c$c  $c$c                   `n"
+	$logo += "$($cl.bb) $($cl.ty)                 $c$c       $($cl.tr)$c$c    $c$c $($cl.tw)$c$c   $c$c $c$c   $c$c $c$c   $c$c $c$c   $c$c   $c$c   $c$c   $c$c   $c$c     $c$c   $c$c $c$c  $c$c  $c$c                   `n"
+	$logo += "$($cl.bb) $($cl.ty)                 $c$c       $($cl.tr)$c$c$c$c$c$c$c$c $($cl.tw)$c$c$c$c$c$c$c $c$c$c$c$c$c$c $c$c$c$c$c$c$c $c$c$c$c$c$c$c   $c$c   $c$c   $c$c $p $c$c$c$c$c$c $c$c$c$c$c$c$c $c$c  $c$c  $c$c                   `n"
+	$logo += "$($cl.bb)                                                                                                                                 `n"
+	$logo += "$($cl.bb)$($cl.tw)                                                                                $($cl.ti)Camilo Salazar (ChyBeat)                         `n"
+	$logo += "$($cl.bb)$($cl.to)                                                                       Limited Liability Partner - $copy$year                         `n"
+	$logo += "$($cl.bb)                                                                                                                                 `n$([char]0x1b)[0m"
 	Write-Host $logo
 }
+
 
 <#######################
 # Ejecución del modulo #
 #######################>
 
 #Ajuste de ventana
+$Host.UI.RawUI.BackGroundColor = "black"
 if (!($env:TERM_PROGRAM) -and !($psISE)) {
 	[console]::WindowWidth = 129; [console]::WindowHeight = 42; [console]::BufferWidth = [console]::WindowWidth
 }
@@ -1894,6 +2023,33 @@ $global:requiredLibraries = @(
 )
 
 write-logo
+#variable con los colores para la terminal
+$global:TerminalColor = [PSCustomObject]@{
+	bg    = [PSCustomObject]@{
+		black = "$([char]0x1b)[48;5;0m" #fondo black/negro
+		white = "$([char]0x1b)[48;5;255m" #Fondo blanco
+		red   = "$([char]0x1b)[48;5;124m" #Fondo Rojo
+		green = "$([char]0x1b)[48;5;22m" #Texto verde
+		reset = "$([char]0x1b)[49m" # Resetear solo el fondo
+	}
+	txt   = [PSCustomObject]@{
+		black     = "$([char]0x1b)[38;5;16m" #Texto en negro
+		yellow    = "$([char]0x1b)[38;5;214m" #Texto amarillo
+		red       = "$([char]0x1b)[38;5;196m" #Texto rojo
+		white     = "$([char]0x1b)[38;5;15m" #Texto Blanco
+		cyan      = "$([char]0x1b)[38;5;51m" #Texto Azul Claro
+		green     = "$([char]0x1b)[38;5;154m" #Texto verde
+		opaque    = "$([char]0x1b)[2m" #Texto opaco
+		blink     = "$([char]0x1b)[6m" # texto intermitente rápido
+		bold      = "$([char]0x1b)[1m" #Texto en negrita
+		italic    = "$([char]0x1b)[3m" #texto en cursiva
+		underline = "$([char]0x1b)[4m" #Colores invertidos
+		invert    = "$([char]0x1b)[7m" #Colores invertidos
+		reset     = "$([char]0x1b)[39m" # Resetear solo el texto
+	}
+	reset = "$([char]0x1b)[0m"
+}
+
 Write-Host -ForegroundColor White -BackgroundColor Black "`n" $Text.ToUpper() "`n`n"
 Register-Libraries($requiredLibraries)
 
@@ -1925,9 +2081,13 @@ $global:x64 = Get-Architecture -Architecture "x64"
 #################################
 # Ejecuciones y configuraciones #
 #################################
+# Cambio de tamano de consola si no se ejecuta desde VSCode o Windows Powershell ISE
+if (!($env:TERM_PROGRAM -eq 'vscode') -and !($psISE)) {
+	[console]::WindowWidth = 129; [console]::WindowHeight = 42; [console]::BufferWidth = [console]::WindowWidth
+}
+
 
 # Cambio al esquema de energía (nunca apagarse)
-
 powercfg /hibernate OFF
 powercfg /change monitor-timeout-ac 0
 powercfg /change monitor-timeout-dc 0

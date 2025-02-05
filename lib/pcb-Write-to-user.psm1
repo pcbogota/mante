@@ -1,14 +1,46 @@
-#Funciones para mostrar mensajes en colores
+# Funciones para mostrar mensajes en colores
+# Las configuraciónes de texto y/o fondo se deben colocar al inicio del texto. Al final de toda línea, si o si
+# debe llevar $($TerminalColor.reset). Esto último para evitr cabios de color en textos suyacentes!
+# Ej: Write-Host "$($TerminalColor.txt.green)fondo verde letras$($TerminalColor.reset) negras"
+
+#Función para dividir líneas con su respectivo fin de cambios de color ANSI
+function Reset-EndLine {
+	param(
+		[Parameter(Mandatory, Position = 0)]
+		[string]
+		$Text,
+		[string]
+		$custom,
+		[switch]
+		$space
+	)
+	# Dividir el texto en líneas basado en los saltos de línea
+	if ($space) {
+		$spacer = " "
+	} else {
+		$spacer = ''
+	}
+	$lines = ($Text -split "`n")
+	$formatedText = ""
+	# Recorrer cada línea y aplicar el formato de color
+	foreach ($line in $lines) {
+		if (-not [string]::IsNullOrWhiteSpace($line)) {
+			$formatedText += "$($custom)$spacer$($line)$spacer$($TerminalColor.reset)`n"
+		}
+	}
+	return $formatedText.TrimEnd("`n")
+}
+
 function wError {
 	<#
 	.SYNOPSIS
-		Mostar un texto de error
+		Mostar un texto en formateado que simbolice error
 
 	.DESCRIPTION
-		Muestra un texto con fondo negro y letras rojas simbolizando un error
+		Muestra un texto con fondo rojo y letras blancas simbolizando un error
 
 	.PARAMETER Text
-		El texto a mostrar en formato de error
+		El texto a mostrar
 	#>
 	param(
 		[Parameter(Mandatory, Position = 0)]
@@ -16,8 +48,9 @@ function wError {
 		$Text
 	)
 	process {
-		Write-Host -ForegroundColor red -BackgroundColor Black $Text
-		Write-Host ""
+		$text = $text[0].ToString().ToUpper() + $text.Substring(1)
+		$errotText = Reset-EndLine -Text "$($Text)" -custom "$($TerminalColor.txt.bold)$($TerminalColor.bg.red)" -space
+		Write-Host "$($errotText)`n"
 	}
 }
 
@@ -27,10 +60,10 @@ function wInfo {
 		Mostar un texto informativo
 
 	.DESCRIPTION
-		Muestra un texto normal, sin formato
+		Muestra un texto de color cyan y sin formato
 
 	.PARAMETER Text
-		El texto a mostrar en formato de información
+		El texto a mostrar
 	#>
 	param(
 		[Parameter(Mandatory, Position = 0)]
@@ -38,8 +71,7 @@ function wInfo {
 		$Text
 	)
 	process {
-		Write-Host $Text
-		Write-Host ""
+		Write-Host (Reset-EndLine -Text "$($Text)" -custom "$($TerminalColor.txt.bold)$($TerminalColor.txt.cyan)")
 	}
 }
 
@@ -52,7 +84,7 @@ function wOk {
 		Muestra un texto con letras verdes indicando una ejecución exitosa
 
 	.PARAMETER Text
-		El texto a mostrar en formato de ejecución
+		El texto a mostrar
 	#>
 	param(
 		[Parameter(Mandatory, Position = 0)]
@@ -60,21 +92,20 @@ function wOk {
 		$Text
 	)
 	process {
-		Write-Host -ForegroundColor Green $Text
-		Write-Host ""
+		Write-Host (Reset-EndLine -Text "$($Text)" -custom "$($TerminalColor.txt.green)")"`n"
 	}
 }
 
 function wRun {
 	<#
 	.SYNOPSIS
-		Mostar un texto en formato de ejecución
+		Mostar un texto en formato relevante indicando inicio o ejecución
 
 	.DESCRIPTION
-		Muestra un texto con letras amarillas indicando una ejecución
+		Muestra un texto con fondo verde y letras blancas indicando una ejecución
 
 	.PARAMETER Text
-		El texto a mostrar en formato de ejecución
+		El texto a mostrar
 	#>
 	param(
 		[Parameter(Mandatory, Position = 0)]
@@ -82,8 +113,8 @@ function wRun {
 		$Text
 	)
 	process {
-		Write-Host -ForegroundColor Yellow $Text
-		Write-Host ""
+		Write-Host (Reset-EndLine -Text " $($Text) " -custom "$($TerminalColor.bg.green)$($TerminalColor.txt.white)" -Space)
+
 	}
 }
 
@@ -104,12 +135,26 @@ function WTitulo {
 		$Text
 	)
 	process {
-		Write-Host ""
-		Write-Host -ForegroundColor White -BackgroundColor Black $Text.ToUpper()
-		Write-Host ""
-		Write-Host ""
+		$width = $text.Length
+		$Spaces = 8
+		$width += ($spaces * 2)
+		#		$formatedText = (Reset-EndLine -Text "$($text.ToUpper())" -custom "$($TerminalColor.txt.underline)$($TerminalColor.txt.black)")
+		#		$finalText += $formatedText + $TerminalColor.reset
+		$clearLine = "-" * $width
+		# Primera línea en blanco
+		$finalText = "$($TerminalColor.bg.white)$($TerminalColor.txt.white)$clearLine`n"
+		# Espacios al lado izquierdo
+		$finalText += "$($TerminalColor.bg.white)" + ("-" * $Spaces) + $($TerminalColor.txt.underline)
+		# Texto del título
+		$finalText += "$($TerminalColor.txt.black)$($text.ToUpper())$($TerminalColor.reset)"
+		# Espacios al lado derecho
+		$finalText += "$($TerminalColor.bg.white)$($TerminalColor.txt.white)" + ("-" * $Spaces) + "$($TerminalColor.txt.reset)$($TerminalColor.bg.reset)$($TerminalColor.reset)`n"
+		# Ultima línea en blanco
+		$finalText += "$($TerminalColor.txt.white)$($TerminalColor.bg.white)$clearLine$($TerminalColor.reset)`n"
+		Write-Host $finalText
 	}
 }
+
 function Preprint {
 	<#
 	.SYNOPSIS
