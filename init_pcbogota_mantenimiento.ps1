@@ -43,11 +43,11 @@ $global:ManteScriptPath = "$env:PROGRAMDATA\PCBogota\libs"
 ## ------------ ##
 ##################
 
-#Get-RequiredModules
-
 Clear-Host
-Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-win_install_main_module.psm1" -Global -Force
-Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-main_mante_module.psm1" -Global -Force
+Get-RequiredModules
+
+# Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-win_install_main_module.psm1" -Global -Force
+# Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-main_mante_module.psm1" -Global -Force
 # Get-Greetings
 # return
 
