@@ -45,8 +45,9 @@ $global:ManteScriptPath = "$env:PROGRAMDATA\PCBogota\libs"
 
 #Get-RequiredModules
 
-# Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-win_install_main_module.psm1" -Global -Force
-# Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-main_mante_module.psm1" -Global -Force
+Clear-Host
+Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-win_install_main_module.psm1" -Global -Force
+Import-Module -DisableNameChecking "$PSScriptroot\lib\pcb-main_mante_module.psm1" -Global -Force
 # Get-Greetings
 # return
 
@@ -72,11 +73,11 @@ Get-ExecutionPolicy -List
 
 Write-Host "Inicializalizando...`n`n"
 Write-Host 'Para inicializar se require:
-PowerShell.exe Set-ExecutionPolicy -Scope CurrentUser Unrestricted -force
-powershell.exe Set-ExecutionPolicy -Scope LocalMachine Unrestricted -force
+Set-ExecutionPolicy -Scope CurrentUser Unrestricted -force
+Set-ExecutionPolicy -Scope LocalMachine Unrestricted -force
 
-Pero se debe dejar:
-powershell.exe Set-ExecutionPolicy -Scope LocalMachine Undefined -force
-PowerShell.exe Set-ExecutionPolicy -Scope CurrentUser Undefined -force
+El valor predeterminado es:
+Set-ExecutionPolicy -Scope LocalMachine Undefined -force
+Set-ExecutionPolicy -Scope CurrentUser Undefined -force
 '
-Write-Host "Aquí veras cositas raras nene ❤️😂😊👌. este archivo se ha actualizado!"
+Write-Host "Aquí veras cositas raras nene ❤️😂😊👌."
